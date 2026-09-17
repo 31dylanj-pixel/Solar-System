@@ -8,193 +8,233 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <div class="space">
+    <div class="stars"></div>
 
-        <!-- Stars -->
-        <div class="stars stars-1"></div>
-        <div class="stars stars-2"></div>
-        <div class="stars stars-3"></div>
+    <!-- TOP BAR -->
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-mark">◉</div>
 
-        <!-- Header -->
-        <header class="topbar">
-
-            <div class="brand">
-                <div class="brand-icon">◉</div>
-
-                <div>
-                    <h1>ORBIT</h1>
-                    <span>Solar System Explorer</span>
-                </div>
+            <div>
+                <h1>ORBIT</h1>
+                <p>Solar System Explorer</p>
             </div>
+        </div>
 
-            <div class="header-status">
-                <span class="status-dot"></span>
-                <span>SIMULATION ACTIVE</span>
-            </div>
+        <div class="status">
+            <span class="status-dot"></span>
+            <span id="statusText">SIMULATION ACTIVE</span>
+        </div>
+    </header>
 
-        </header>
 
+    <!-- MAIN VIEW -->
+    <main>
 
-        <!-- Main visualization -->
-        <main class="solar-system-container">
+        <section class="space">
 
             <div class="solar-system" id="solarSystem">
 
-                <!-- Sun -->
-                <div class="sun" id="sun">
+                <!-- SUN -->
+                <div class="sun" data-planet="sun">
                     <div class="sun-glow"></div>
                     <div class="sun-core"></div>
-
-                    <div class="object-label sun-label">
-                        Sun
-                    </div>
+                    <span class="planet-label">Sun</span>
                 </div>
 
 
-                <!-- Mercury -->
+                <!-- MERCURY -->
                 <div class="orbit orbit-mercury">
                     <div class="planet-wrapper"
-                         data-name="Mercury"
-                         data-distance="57.9 million km">
-
+                         data-planet="mercury"
+                         data-radius="105">
                         <div class="planet mercury"></div>
-
-                        <div class="object-label">
-                            Mercury
-                        </div>
+                        <span class="planet-label">Mercury</span>
                     </div>
                 </div>
 
 
-                <!-- Venus -->
+                <!-- VENUS -->
                 <div class="orbit orbit-venus">
                     <div class="planet-wrapper"
-                         data-name="Venus"
-                         data-distance="108.2 million km">
-
+                         data-planet="venus"
+                         data-radius="145">
                         <div class="planet venus"></div>
-
-                        <div class="object-label">
-                            Venus
-                        </div>
+                        <span class="planet-label">Venus</span>
                     </div>
                 </div>
 
 
-                <!-- Earth -->
+                <!-- EARTH -->
                 <div class="orbit orbit-earth">
                     <div class="planet-wrapper"
-                         data-name="Earth"
-                         data-distance="149.6 million km">
-
-                        <div class="planet earth"></div>
-
-                        <div class="object-label">
-                            Earth
+                         data-planet="earth"
+                         data-radius="185">
+                        <div class="planet earth">
+                            <div class="earth-cloud cloud-one"></div>
+                            <div class="earth-cloud cloud-two"></div>
                         </div>
+                        <span class="planet-label">Earth</span>
                     </div>
                 </div>
 
 
-                <!-- Mars -->
+                <!-- MARS -->
                 <div class="orbit orbit-mars">
                     <div class="planet-wrapper"
-                         data-name="Mars"
-                         data-distance="227.9 million km">
-
+                         data-planet="mars"
+                         data-radius="225">
                         <div class="planet mars"></div>
-
-                        <div class="object-label">
-                            Mars
-                        </div>
+                        <span class="planet-label">Mars</span>
                     </div>
                 </div>
 
 
-                <!-- Jupiter -->
+                <!-- JUPITER -->
                 <div class="orbit orbit-jupiter">
                     <div class="planet-wrapper"
-                         data-name="Jupiter"
-                         data-distance="778.5 million km">
-
-                        <div class="planet jupiter"></div>
-
-                        <div class="object-label">
-                            Jupiter
+                         data-planet="jupiter"
+                         data-radius="285">
+                        <div class="planet jupiter">
+                            <div class="jupiter-band band-one"></div>
+                            <div class="jupiter-band band-two"></div>
+                            <div class="jupiter-band band-three"></div>
+                            <div class="jupiter-spot"></div>
                         </div>
+                        <span class="planet-label">Jupiter</span>
                     </div>
                 </div>
 
 
-                <!-- Saturn -->
+                <!-- SATURN -->
                 <div class="orbit orbit-saturn">
                     <div class="planet-wrapper"
-                         data-name="Saturn"
-                         data-distance="1.43 billion km">
+                         data-planet="saturn"
+                         data-radius="345">
 
                         <div class="planet saturn">
-                            <div class="saturn-ring"></div>
+                            <div class="saturn-rings"></div>
                         </div>
 
-                        <div class="object-label">
-                            Saturn
-                        </div>
+                        <span class="planet-label">Saturn</span>
                     </div>
                 </div>
 
 
-                <!-- Uranus -->
+                <!-- URANUS -->
                 <div class="orbit orbit-uranus">
                     <div class="planet-wrapper"
-                         data-name="Uranus"
-                         data-distance="2.87 billion km">
-
+                         data-planet="uranus"
+                         data-radius="400">
                         <div class="planet uranus"></div>
-
-                        <div class="object-label">
-                            Uranus
-                        </div>
+                        <span class="planet-label">Uranus</span>
                     </div>
                 </div>
 
 
-                <!-- Neptune -->
+                <!-- NEPTUNE -->
                 <div class="orbit orbit-neptune">
                     <div class="planet-wrapper"
-                         data-name="Neptune"
-                         data-distance="4.50 billion km">
-
+                         data-planet="neptune"
+                         data-radius="455">
                         <div class="planet neptune"></div>
-
-                        <div class="object-label">
-                            Neptune
-                        </div>
+                        <span class="planet-label">Neptune</span>
                     </div>
                 </div>
 
             </div>
 
-        </main>
+
+            <!-- FOCUS INFO PANEL -->
+            <aside class="planet-panel" id="planetPanel">
+
+                <button class="close-panel" id="closePanel" aria-label="Close planet information">
+                    ×
+                </button>
+
+                <div class="panel-eyebrow" id="panelType">
+                    PLANET
+                </div>
+
+                <h2 id="panelName">Earth</h2>
+
+                <p class="panel-description" id="panelDescription">
+                    Earth is the third planet from the Sun and the only astronomical
+                    object known to harbor life.
+                </p>
 
 
-        <!-- Bottom controls -->
+                <div class="planet-stats">
+
+                    <div class="stat">
+                        <span>Distance</span>
+                        <strong id="panelDistance">149.6 million km</strong>
+                    </div>
+
+                    <div class="stat">
+                        <span>Diameter</span>
+                        <strong id="panelDiameter">12,742 km</strong>
+                    </div>
+
+                    <div class="stat">
+                        <span>Day</span>
+                        <strong id="panelDay">23.9 hours</strong>
+                    </div>
+
+                    <div class="stat">
+                        <span>Year</span>
+                        <strong id="panelYear">365.25 days</strong>
+                    </div>
+
+                    <div class="stat">
+                        <span>Moons</span>
+                        <strong id="panelMoons">1</strong>
+                    </div>
+
+                    <div class="stat">
+                        <span>Type</span>
+                        <strong id="panelCategory">Terrestrial</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="panel-fact">
+                    <span class="fact-label">DID YOU KNOW?</span>
+                    <p id="panelFact">
+                        Earth is the only planet currently known to support life.
+                    </p>
+                </div>
+
+
+                <button class="back-button" id="backButton">
+                    <span>←</span>
+                    Back to Solar System
+                </button>
+
+            </aside>
+
+        </section>
+
+
+        <!-- CONTROLS -->
         <section class="controls">
 
             <div class="control-group">
 
-                <button class="control-button" id="playPause">
-                    <span id="playIcon">▶</span>
-                    <span id="playText">Pause</span>
+                <button class="control-button" id="pauseButton">
+                    <span id="pauseIcon">Ⅱ</span>
+                    <span id="pauseText">Pause</span>
                 </button>
 
-                <button class="control-button" id="reset">
+                <button class="control-button" id="resetButton">
                     ↻
                     <span>Reset</span>
                 </button>
@@ -202,50 +242,46 @@
             </div>
 
 
-            <div class="control-group sliders">
+            <div class="slider-group">
 
-                <div class="slider-control">
-
-                    <div class="slider-header">
-                        <span>Simulation Speed</span>
-                        <strong id="speedValue">1×</strong>
-                    </div>
-
-                    <input
-                        type="range"
-                        id="speedSlider"
-                        min="0"
-                        max="100"
-                        value="25"
-                    >
-
+                <div class="slider-header">
+                    <span>Speed</span>
+                    <strong id="speedValue">50%</strong>
                 </div>
 
+                <input
+                    type="range"
+                    id="speedSlider"
+                    min="0"
+                    max="100"
+                    value="50"
+                >
 
-                <div class="slider-control">
+            </div>
 
-                    <div class="slider-header">
-                        <span>Zoom</span>
-                        <strong id="zoomValue">100%</strong>
-                    </div>
 
-                    <input
-                        type="range"
-                        id="zoomSlider"
-                        min="60"
-                        max="150"
-                        value="100"
-                    >
+            <div class="slider-group">
 
+                <div class="slider-header">
+                    <span>Zoom</span>
+                    <strong id="zoomValue">100%</strong>
                 </div>
+
+                <input
+                    type="range"
+                    id="zoomSlider"
+                    min="60"
+                    max="300"
+                    value="100"
+                >
 
             </div>
 
         </section>
 
 
-        <!-- Footer information -->
-        <div class="bottom-info">
+        <!-- BOTTOM INFO -->
+        <section class="bottom-info">
 
             <div>
                 <span>OBJECTS</span>
@@ -259,12 +295,13 @@
 
             <div>
                 <span>MODE</span>
-                <strong>ORBITAL</strong>
+                <strong id="modeText">ORBITAL</strong>
             </div>
 
-        </div>
+        </section>
 
-    </div>
+    </main>
+
 
     <script src="script.js"></script>
 
