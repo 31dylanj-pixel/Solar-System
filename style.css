@@ -217,12 +217,9 @@ main {
     transform: translate(-50%, -50%);
 
     border: 1px solid var(--orbit);
-
     border-radius: 50%;
 
-    animation-name: orbitSpin;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
+    animation: none;
 
     transition:
         opacity .5s ease,
@@ -310,10 +307,12 @@ main {
     position: absolute;
 
     left: 50%;
-    top: 0;
+    top: 50%;
 
-    transform:
-        translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+
+    width: max-content;
+    height: max-content;
 
     cursor: pointer;
 
@@ -324,9 +323,9 @@ main {
         filter .45s ease;
 }
 
-
 .planet-wrapper:hover {
-    filter: brightness(1.3);
+    filter: brightness(1.35);
+    z-index: 50;
 }
 
 
