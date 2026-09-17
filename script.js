@@ -197,6 +197,10 @@ let selectedPlanet = null;
 
 let currentZoom = 100;
 
+let focusX = 0;
+let focusY = 0;
+let focusScale = 1.8;
+
 let focusAnimation = null;
 
 let lastTime = performance.now();
@@ -495,7 +499,7 @@ function focusPlanet(planetKey) {
         remove its selected classes first.
     */
 
-    document.querySelectorAll(".selected-object")
+   document.querySelectorAll(".selected-object")
         .forEach(element => {
 
             element.classList.remove(
@@ -505,8 +509,8 @@ function focusPlanet(planetKey) {
         });
 
 
-    document.querySelectorAll(".selected-orbit")
-        .forEach(element => {
+   document.querySelectorAll(".selected-orbit")
+         .forEach(element => {
 
             element.classList.remove(
                 "selected-orbit"
@@ -514,9 +518,29 @@ function focusPlanet(planetKey) {
 
         });
 
+   focusX = 0;
+   focusY = 0;
+   
+   selectedPlanet = planetKey;
 
-    selectedPlanet = planetKey;
-
+    /*
+       Choose a focus zoom based on the object.
+   */
+   
+   const focusZooms = {
+       sun: 1.15,
+       mercury: 2.4,
+       venus: 2.1,
+       earth: 2.1,
+       mars: 2.3,
+       jupiter: 1.45,
+       saturn: 1.4,
+       uranus: 1.75,
+       neptune: 1.75
+   };
+   
+   focusScale =
+       focusZooms[planetKey] || 1.8;
 
     /*
         Find the selected object.
@@ -614,140 +638,96 @@ function focusPlanet(planetKey) {
 
 function updateFocusCamera() {
 
-    if (!selectedPlanet || paused) {
+    if (!selectedPlanet) {
         return;
     }
 
 
-    const selectedElement =
-        selectedPlanet === "sun"
-            ? document.querySelector(".sun")
-            : document.querySelector(
-                `.planet-wrapper[data-planet="${selectedPlanet}"]`
-            );
-
-
-    if (!selectedElement) {
-        return;
-    }
-
-
-    const planetRect =
-        selectedElement.getBoundingClientRect();
-
-
     /*
-        Put the selected planet roughly in the
-        left-center of the screen so the information
-        panel has room on the right.
+        The Sun is already at the center,
+        so there is nothing to follow.
     */
-
-    const targetX =
-        window.innerWidth * 0.35;
-
-    const targetY =
-        window.innerHeight * 0.5;
-
-
-    const planetX =
-        planetRect.left +
-        planetRect.width / 2;
-
-    const planetY =
-        planetRect.top +
-        planetRect.height / 2;
-
-
-    const differenceX =
-        targetX - planetX;
-
-    const differenceY =
-        targetY - planetY;
-
-
-    /*
-        Determine a cinematic scale.
-    */
-
-    const planetSize =
-        Math.max(
-            planetRect.width,
-            planetRect.height
-        );
-
-
-    let focusScale;
 
     if (selectedPlanet === "sun") {
 
-        focusScale = 2.6;
+        solarSystem.style.transform =
+            `translate(-50%, -50%) scale(${focusScale})`;
 
-    } else {
-
-        focusScale =
-            clamp(
-                180 / planetSize,
-                3.5,
-                7
-            );
+        return;
 
     }
 
 
     /*
-        Don't let normal zoom fight the focus camera.
+        Find the selected planet.
     */
 
-    const zoomInfluence =
-        currentZoom / 100;
-
-    const finalScale =
-        focusScale *
-        (0.85 + zoomInfluence * 0.15);
-
-
-    const currentX =
-        Number(
-            solarSystem.dataset.cameraX || 0
+    const wrapper =
+        document.querySelector(
+            `.planet-wrapper[data-planet="${selectedPlanet}"]`
         );
 
-    const currentY =
-        Number(
-            solarSystem.dataset.cameraY || 0
-        );
+    if (!wrapper) {
+        return;
+    }
 
 
-    const smoothX =
-        currentX +
-        (
-            differenceX -
-            currentX
-        ) * 0.12;
+    /*
+        Get the planet's current orbit information.
+    */
+
+    const radius =
+        Number(wrapper.dataset.radius);
+
+    const angle =
+        planetAngles[selectedPlanet];
 
 
-    const smoothY =
-        currentY +
-        (
-            differenceY -
-            currentY
-        ) * 0.12;
+    /*
+        This is the exact position of the planet
+        relative to the center of the Solar System.
+    */
+
+    const planetX =
+        Math.sin(angle) * radius;
+
+    const planetY =
+        -Math.cos(angle) * radius;
 
 
-    solarSystem.dataset.cameraX =
-        smoothX;
+    /*
+        Move the entire Solar System in the
+        opposite direction.
 
-    solarSystem.dataset.cameraY =
-        smoothY;
+        This puts the selected planet directly
+        in the center of the visualization.
+    */
 
+    const targetX =
+        -planetX;
+
+    const targetY =
+        -planetY;
+
+
+    /*
+        Smooth camera movement.
+    */
+
+    focusX +=
+        (targetX - focusX) * 0.08;
+
+    focusY +=
+        (targetY - focusY) * 0.08;
+
+
+    /*
+        Apply the camera movement.
+    */
 
     solarSystem.style.transform =
-        `translate(
-            calc(-50% + ${smoothX}px),
-            calc(-50% + ${smoothY}px)
-        )
-        scale(${finalScale})`;
+        `translate(calc(-50% + ${focusX}px), calc(-50% + ${focusY}px)) scale(${focusScale})`;
 }
-
 
 /* =========================================================
    EXIT FOCUS MODE
@@ -755,23 +735,26 @@ function updateFocusCamera() {
 
 function closeFocus() {
 
-    selectedPlanet = null;
+   selectedPlanet = null;
+
+   focusX = 0;
+   focusY = 0;
+   focusScale = 1.8;
+   
+   document.body.classList.remove(
+       "focus-mode"
+   );
 
 
-    document.body.classList.remove(
-        "focus-mode"
-    );
+   document.querySelectorAll(
+      ".selected-object"
+   ).forEach(element => {
 
+      element.classList.remove(
+         "selected-object"
+      );
 
-    document.querySelectorAll(
-        ".selected-object"
-    ).forEach(element => {
-
-        element.classList.remove(
-            "selected-object"
-        );
-
-    });
+   );
 
 
     document.querySelectorAll(
