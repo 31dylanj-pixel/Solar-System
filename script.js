@@ -244,41 +244,40 @@ function clamp(value, min, max) {
 
 function updatePlanets(deltaTime) {
 
-    if (!paused) {
+    /*
+        If paused, NOTHING moves.
+        The planets, camera, and simulation all stay frozen.
+    */
 
-        /*
-            Speed is converted from the 0–100 slider
-            into a usable multiplier.
-        */
-
-        const speedMultiplier =
-            Number(speedSlider.value) / 50;
-
-
-        Object.keys(planetAngles).forEach(planet => {
-
-            planetAngles[planet] +=
-                planetSpeeds[planet] *
-                speedMultiplier *
-                deltaTime *
-                0.0005;
-
-            /*
-                Keep angles from growing forever.
-            */
-
-            if (planetAngles[planet] > Math.PI * 2) {
-                planetAngles[planet] -= Math.PI * 2;
-            }
-
-        });
-
+    if (paused) {
+        return;
     }
 
+    const speedMultiplier =
+        Number(speedSlider.value) / 50;
+
+    Object.keys(planetAngles).forEach(planet => {
+
+        planetAngles[planet] +=
+            planetSpeeds[planet] *
+            speedMultiplier *
+            deltaTime *
+            0.0005;
+
+        if (planetAngles[planet] > Math.PI * 2) {
+            planetAngles[planet] -= Math.PI * 2;
+        }
+    });
+
+
+    /*
+        Position every planet around its orbit.
+    */
 
     document.querySelectorAll(".planet-wrapper").forEach(wrapper => {
 
-        const planet = wrapper.dataset.planet;
+        const planet =
+            wrapper.dataset.planet;
 
         const orbitRadius =
             Number(wrapper.dataset.radius);
@@ -287,14 +286,6 @@ function updatePlanets(deltaTime) {
             planetAngles[planet];
 
 
-        /*
-            The actual orbit animation is handled here
-            instead of CSS. This gives us precise control
-            over the planet's position.
-
-            That is what lets Phase 2 follow a moving planet.
-        */
-
         const x =
             Math.sin(angle) * orbitRadius;
 
@@ -302,13 +293,14 @@ function updatePlanets(deltaTime) {
             -Math.cos(angle) * orbitRadius;
 
 
-        wrapper.style.left = `calc(50% + ${x}px)`;
-        wrapper.style.top = `calc(50% + ${y}px)`;
+        wrapper.style.left =
+            `calc(50% + ${x}px)`;
+
+        wrapper.style.top =
+            `calc(50% + ${y}px)`;
 
     });
-
 }
-
 
 /* =========================================================
    ANIMATION LOOP
@@ -321,15 +313,29 @@ function animationLoop(timestamp) {
 
     lastTime = timestamp;
 
+
+    /*
+        Update planets only when playing.
+    */
+
     updatePlanets(deltaTime);
 
-    updateFocusCamera();
+
+    /*
+        The camera only follows during active
+        simulation. Pausing therefore freezes
+        EVERYTHING.
+    */
+
+    if (!paused && selectedPlanet) {
+        updateFocusCamera();
+    }
+
 
     requestAnimationFrame(animationLoop);
 }
 
 requestAnimationFrame(animationLoop);
-
 
 /* =========================================================
    NORMAL ZOOM
@@ -344,21 +350,24 @@ function updateZoom() {
         `${currentZoom}%`;
 
 
+    /*
+        Normal Solar System zoom.
+    */
+
     if (!selectedPlanet) {
 
-        solarSystem.style.setProperty(
-            "--zoom",
-            currentZoom / 100
-        );
+        solarSystem.style.transform =
+            `translate(-50%, -50%) scale(${currentZoom / 100})`;
 
     }
 
 }
 
+zoomSlider.addEventListener("input", () => {
 
-zoomSlider.addEventListener("input", updateZoom);
+    updateZoom();
 
-
+});
 /* =========================================================
    SPEED
 ========================================================= */
@@ -605,7 +614,7 @@ function focusPlanet(planetKey) {
 
 function updateFocusCamera() {
 
-    if (!selectedPlanet) {
+    if (!selectedPlanet || paused) {
         return;
     }
 
@@ -623,53 +632,44 @@ function updateFocusCamera() {
     }
 
 
-    /*
-        Get the planet's position on screen.
-    */
-
     const planetRect =
         selectedElement.getBoundingClientRect();
 
 
-    const viewportCenterX =
-        window.innerWidth * 0.38;
+    /*
+        Put the selected planet roughly in the
+        left-center of the screen so the information
+        panel has room on the right.
+    */
 
-    const viewportCenterY =
+    const targetX =
+        window.innerWidth * 0.35;
+
+    const targetY =
         window.innerHeight * 0.5;
 
 
-    const planetCenterX =
+    const planetX =
         planetRect.left +
         planetRect.width / 2;
 
-    const planetCenterY =
+    const planetY =
         planetRect.top +
         planetRect.height / 2;
 
 
-    /*
-        Calculate where the planet needs to move.
-    */
-
     const differenceX =
-        viewportCenterX -
-        planetCenterX;
+        targetX - planetX;
 
     const differenceY =
-        viewportCenterY -
-        planetCenterY;
+        targetY - planetY;
 
 
     /*
-        Estimate the planet's current visual size.
-
-        We dynamically choose a focus scale so:
-        - Mercury doesn't become microscopic
-        - Jupiter doesn't become enormous
-        - each planet gets a cinematic close-up
+        Determine a cinematic scale.
     */
 
-    const basePlanetSize =
+    const planetSize =
         Math.max(
             planetRect.width,
             planetRect.height
@@ -686,7 +686,7 @@ function updateFocusCamera() {
 
         focusScale =
             clamp(
-                180 / basePlanetSize,
+                180 / planetSize,
                 3.5,
                 7
             );
@@ -695,58 +695,16 @@ function updateFocusCamera() {
 
 
     /*
-        User zoom still influences focus mode,
-        but at a reduced strength so the camera
-        remains cinematic.
+        Don't let normal zoom fight the focus camera.
     */
 
     const zoomInfluence =
         currentZoom / 100;
 
-
     const finalScale =
         focusScale *
         (0.85 + zoomInfluence * 0.15);
 
-
-    /*
-        Temporarily remove the camera transform
-        so we can calculate the world's natural
-        planet position.
-    */
-
-    const currentTransform =
-        solarSystem.style.transform;
-
-
-    /*
-        We use the planet's screen position and
-        compensate for the existing zoom.
-    */
-
-    const scale =
-        finalScale /
-        (currentZoom / 100);
-
-
-    /*
-        Apply a camera-like transform.
-
-        The translation is intentionally smoothed
-        so the camera follows the planet rather than
-        snapping.
-    */
-
-    const targetX =
-        differenceX / (currentZoom / 100);
-
-    const targetY =
-        differenceY / (currentZoom / 100);
-
-
-    /*
-        Store values on the element.
-    */
 
     const currentX =
         Number(
@@ -758,15 +716,21 @@ function updateFocusCamera() {
             solarSystem.dataset.cameraY || 0
         );
 
+
     const smoothX =
         currentX +
-        (targetX - currentX) *
-        0.12;
+        (
+            differenceX -
+            currentX
+        ) * 0.12;
+
 
     const smoothY =
         currentY +
-        (targetY - currentY) *
-        0.12;
+        (
+            differenceY -
+            currentY
+        ) * 0.12;
 
 
     solarSystem.dataset.cameraX =
@@ -777,7 +741,11 @@ function updateFocusCamera() {
 
 
     solarSystem.style.transform =
-        `translate(calc(-50% + ${smoothX}px), calc(-50% + ${smoothY}px)) scale(${scale})`;
+        `translate(
+            calc(-50% + ${smoothX}px),
+            calc(-50% + ${smoothY}px)
+        )
+        scale(${finalScale})`;
 }
 
 
@@ -821,6 +789,10 @@ function closeFocus() {
     solarSystem.dataset.cameraY = 0;
 
 
+    /*
+        Return to the user's current zoom.
+    */
+
     solarSystem.style.transform =
         `translate(-50%, -50%) scale(${currentZoom / 100})`;
 
@@ -835,9 +807,7 @@ function closeFocus() {
         paused
             ? "SIMULATION PAUSED"
             : "SIMULATION ACTIVE";
-
 }
-
 
 /* =========================================================
    PLANET CLICK EVENTS
