@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ORBIT — Solar System Explorer</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="space">
+
+        <!-- Stars -->
+        <div class="stars stars-1"></div>
+        <div class="stars stars-2"></div>
+        <div class="stars stars-3"></div>
+
+        <!-- Header -->
+        <header class="topbar">
+
+            <div class="brand">
+                <div class="brand-icon">◉</div>
+
+                <div>
+                    <h1>ORBIT</h1>
+                    <span>Solar System Explorer</span>
+                </div>
+            </div>
+
+            <div class="header-status">
+                <span class="status-dot"></span>
+                <span>SIMULATION ACTIVE</span>
+            </div>
+
+        </header>
+
+
+        <!-- Main visualization -->
+        <main class="solar-system-container">
+
+            <div class="solar-system" id="solarSystem">
+
+                <!-- Sun -->
+                <div class="sun" id="sun">
+                    <div class="sun-glow"></div>
+                    <div class="sun-core"></div>
+
+                    <div class="object-label sun-label">
+                        Sun
+                    </div>
+                </div>
+
+
+                <!-- Mercury -->
+                <div class="orbit orbit-mercury">
+                    <div class="planet-wrapper"
+                         data-name="Mercury"
+                         data-distance="57.9 million km">
+
+                        <div class="planet mercury"></div>
+
+                        <div class="object-label">
+                            Mercury
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Venus -->
+                <div class="orbit orbit-venus">
+                    <div class="planet-wrapper"
+                         data-name="Venus"
+                         data-distance="108.2 million km">
+
+                        <div class="planet venus"></div>
+
+                        <div class="object-label">
+                            Venus
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Earth -->
+                <div class="orbit orbit-earth">
+                    <div class="planet-wrapper"
+                         data-name="Earth"
+                         data-distance="149.6 million km">
+
+                        <div class="planet earth"></div>
+
+                        <div class="object-label">
+                            Earth
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Mars -->
+                <div class="orbit orbit-mars">
+                    <div class="planet-wrapper"
+                         data-name="Mars"
+                         data-distance="227.9 million km">
+
+                        <div class="planet mars"></div>
+
+                        <div class="object-label">
+                            Mars
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Jupiter -->
+                <div class="orbit orbit-jupiter">
+                    <div class="planet-wrapper"
+                         data-name="Jupiter"
+                         data-distance="778.5 million km">
+
+                        <div class="planet jupiter"></div>
+
+                        <div class="object-label">
+                            Jupiter
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Saturn -->
+                <div class="orbit orbit-saturn">
+                    <div class="planet-wrapper"
+                         data-name="Saturn"
+                         data-distance="1.43 billion km">
+
+                        <div class="planet saturn">
+                            <div class="saturn-ring"></div>
+                        </div>
+
+                        <div class="object-label">
+                            Saturn
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Uranus -->
+                <div class="orbit orbit-uranus">
+                    <div class="planet-wrapper"
+                         data-name="Uranus"
+                         data-distance="2.87 billion km">
+
+                        <div class="planet uranus"></div>
+
+                        <div class="object-label">
+                            Uranus
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Neptune -->
+                <div class="orbit orbit-neptune">
+                    <div class="planet-wrapper"
+                         data-name="Neptune"
+                         data-distance="4.50 billion km">
+
+                        <div class="planet neptune"></div>
+
+                        <div class="object-label">
+                            Neptune
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+
+        <!-- Bottom controls -->
+        <section class="controls">
+
+            <div class="control-group">
+
+                <button class="control-button" id="playPause">
+                    <span id="playIcon">▶</span>
+                    <span id="playText">Pause</span>
+                </button>
+
+                <button class="control-button" id="reset">
+                    ↻
+                    <span>Reset</span>
+                </button>
+
+            </div>
+
+
+            <div class="control-group sliders">
+
+                <div class="slider-control">
+
+                    <div class="slider-header">
+                        <span>Simulation Speed</span>
+                        <strong id="speedValue">1×</strong>
+                    </div>
+
+                    <input
+                        type="range"
+                        id="speedSlider"
+                        min="0"
+                        max="100"
+                        value="25"
+                    >
+
+                </div>
+
+
+                <div class="slider-control">
+
+                    <div class="slider-header">
+                        <span>Zoom</span>
+                        <strong id="zoomValue">100%</strong>
+                    </div>
+
+                    <input
+                        type="range"
+                        id="zoomSlider"
+                        min="60"
+                        max="150"
+                        value="100"
+                    >
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Footer information -->
+        <div class="bottom-info">
+
+            <div>
+                <span>OBJECTS</span>
+                <strong>9</strong>
+            </div>
+
+            <div>
+                <span>PLANETS</span>
+                <strong>8</strong>
+            </div>
+
+            <div>
+                <span>MODE</span>
+                <strong>ORBITAL</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
