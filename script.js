@@ -747,14 +747,14 @@ function closeFocus() {
 
 
    document.querySelectorAll(
-      ".selected-object"
+       ".selected-object"
    ).forEach(element => {
-
-      element.classList.remove(
-         "selected-object"
-      );
-
-   );
+   
+       element.classList.remove(
+           "selected-object"
+       );
+   
+   });
 
 
     document.querySelectorAll(
